@@ -6,7 +6,7 @@ function createGameboard() {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i].push(0);
+            board[i].push(createSquare());
         }
     }
 
@@ -16,7 +16,7 @@ function createGameboard() {
         board[row].splice(col,1,piece);
     }
     
-    return {getBoard, placePiece, printBoard};
+    return {getBoard, placePiece};
 }
 
 function createSquare() {
@@ -83,14 +83,37 @@ function gameController() {
         switchPlayerTurn();
     };
 
-    return {playRound,getActivePlayer};
+    return {playRound,getActivePlayer, getBoard: board.getBoard};
 }
 
-const game = gameController();
+function ScreenController() {
+    const game = gameController();
+    const turnUpdate = document.querySelector('.header h2');
+    const boardDiv = document.querySelector('.board');
 
-game.playRound(0,0); //x
-game.playRound(0,1); //o
-game.playRound(1,1); //x
-game.playRound(1,1); //o
-game.playRound(1,2); //x
-game.playRound(2,1); //o
+    const updateScreen = () => {
+        boardDiv.textContent = "";
+
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
+
+        turnUpdate.textContent = `${activePlayer.name}'s turn`;
+
+        board.forEach((row,rowIndex) => {
+            row.forEach((createSquare, index) => {
+
+              const cellButton = document.createElement("button");
+              cellButton.classList.add("cell");
+
+              cellButton.dataset.column = index;
+              cellButton.dataset.row = rowIndex;
+              cellButton.textContent = createSquare.getPiece();
+              boardDiv.appendChild(cellButton);
+            })
+        })
+    }
+
+    updateScreen();
+}
+
+ScreenController();
