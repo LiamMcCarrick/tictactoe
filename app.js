@@ -15,12 +15,6 @@ function createGameboard() {
     const placePiece = (row, col, piece) => {
         board[row].splice(col,1,piece);
     }
-
-    const printBoard = () => {
-        for (let i = 0; i<rows;i++) {
-            console.log(`${board[i]}\n`);
-        }
-    }
     
     return {getBoard, placePiece, printBoard};
 }
@@ -55,13 +49,7 @@ function gameController() {
 
     const getActivePlayer = () => activePlayer;
 
-    const printNewRound = () => {
-        board.printBoard();
-        console.log(`${getActivePlayer().name}'s turn.\n`);
-    };
-
     const playRound = (row, column) => {
-        console.log(`Dropping ${getActivePlayer().name}'s token into row ${row+1} and column ${column+1}...\n`);
         board.placePiece(row, column, getActivePlayer().piece);
 
         const checkWinner = () => {
@@ -93,10 +81,7 @@ function gameController() {
 
         let winner = checkWinner();
         switchPlayerTurn();
-        printNewRound();
     };
-
-    printNewRound();
 
     return {playRound,getActivePlayer};
 }
