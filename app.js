@@ -6,7 +6,7 @@ function createGameboard() {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i].push(createSquare());
+            board[i].push(createSquare().getPiece());
         }
     }
 
@@ -95,24 +95,36 @@ function ScreenController() {
         boardDiv.textContent = "";
 
         const board = game.getBoard();
+        console.log(board);
         const activePlayer = game.getActivePlayer();
 
         turnUpdate.textContent = `${activePlayer.name}'s turn`;
 
         board.forEach((row,rowIndex) => {
-            row.forEach((createSquare, index) => {
+            row.forEach((square, index) => {
 
               const cellButton = document.createElement("button");
               cellButton.classList.add("cell");
 
               cellButton.dataset.column = index;
               cellButton.dataset.row = rowIndex;
-              cellButton.textContent = createSquare.getPiece();
+              cellButton.textContent = square;
               boardDiv.appendChild(cellButton);
             })
         })
     }
 
+    function clickHandler(e) {
+        const selectedCol = e.target.dataset.column;
+        const selectedRow = e.target.dataset.row;
+
+        if (!selectedCol && selectedRow) return;
+
+        game.playRound(selectedRow, selectedCol);
+        updateScreen();
+    }
+
+    boardDiv.addEventListener("click",clickHandler);
     updateScreen();
 }
 
