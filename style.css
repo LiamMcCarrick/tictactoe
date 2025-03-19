@@ -35,10 +35,28 @@ body {
     margin: auto;
 }
 
-.cell {
+.cell, dialog button {
     background-color: rgb(146, 177, 202);
     border: none;
     border-radius: 4px;
     color: rgb(252, 246, 239);
     cursor: pointer;
+}
+
+dialog {
+    padding: 20px;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    height: 150px;
+    width: 400px;
+}
+
+dialog h1, dialog button {
+    color: rgb(146, 177, 202);
+}
+
+dialog button {
+    color: rgb(252, 246, 239);
+    padding: 8px;
 }

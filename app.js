@@ -49,41 +49,40 @@ function gameController() {
 
     const getActivePlayer = () => activePlayer;
 
+    const checkWinner = () => {
+        let winner = '';
+        const currentBoard = board.getBoard();
+        for (let i = 0; i < currentBoard.length; i++) {
+            if (currentBoard[i].every(val => val === 1) || currentBoard[i].every(val => val === 2)) {
+                winner = getActivePlayer().name;
+            }
+        }
+
+        for (let j = 0; j < currentBoard.length; j++) {
+            let col = currentBoard.map(row => row[j]);
+            if (col.every(val => val === 1) || col.every(val => val === 2)) {
+                winner = getActivePlayer().name;
+            }
+        }
+
+        if (currentBoard.every((row, i) => row[i] === 1) || currentBoard.every((row, i) => row[i] === 2)) {
+            winner = getActivePlayer().name;
+        }
+
+        if (currentBoard.every((row, i) => row[currentBoard.length - 1 - i] === 1) || currentBoard.every((row, i) => row[currentBoard.length - 1 - i] === 2)) {
+            winner = getActivePlayer().name;
+        }
+
+        return winner;
+    }
+
     const playRound = (row, column) => {
         board.placePiece(row, column, getActivePlayer().piece);
 
-        const checkWinner = () => {
-            let winner = '';
-            const currentBoard = board.getBoard();
-            for (let i = 0; i < currentBoard.length; i++) {
-                if (currentBoard[i].every(val => val === 1) || currentBoard[i].every(val => val === 2)) {
-                    winner = getActivePlayer().name;
-                }
-            }
-
-            for (let j = 0; j < currentBoard.length; j++) {
-                let col = currentBoard.map(row => row[j]);
-                if (col.every(val => val === 1) || col.every(val => val === 2)) {
-                    winner = getActivePlayer().name;
-                }
-            }
-
-            if (currentBoard.every((row, i) => row[i] === 1) || currentBoard.every((row, i) => row[i] === 2)) {
-                winner = getActivePlayer().name;
-            }
-
-            if (currentBoard.every((row, i) => row[currentBoard.length - 1 - i] === 1) || currentBoard.every((row, i) => row[currentBoard.length - 1 - i] === 2)) {
-                winner = getActivePlayer().name;
-            }
-
-            return winner;
-        }
-
-        let winner = checkWinner();
-        switchPlayerTurn();
+        if (checkWinner() === "") switchPlayerTurn();
     };
 
-    return {playRound,getActivePlayer, getBoard: board.getBoard};
+    return {playRound,getActivePlayer, getBoard: board.getBoard, checkWinner};
 }
 
 function ScreenController() {
@@ -121,11 +120,27 @@ function ScreenController() {
         if (!selectedCol && selectedRow) return;
 
         game.playRound(selectedRow, selectedCol);
+
+        if (game.checkWinner() !== "") {
+            const winner = game.checkWinner();
+            winnerMessage.textContent = `${winner} wins!`
+            dialog.showModal();
+        }
+
         updateScreen();
     }
 
     boardDiv.addEventListener("click",clickHandler);
     updateScreen();
+
+    const dialog = document.querySelector("dialog");
+    const winnerMessage = document.querySelector("dialog h1");
+    const restart = document.querySelector("dialog button");
+
+    restart.addEventListener("click", () => {
+        location.reload();
+        dialog.close();
+    })
 }
 
 ScreenController();
