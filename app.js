@@ -42,6 +42,7 @@ function gameController() {
     const players = [player1,player2];
 
     let activePlayer = players[0];
+    let roundCounter = 0;
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -50,11 +51,13 @@ function gameController() {
     const getActivePlayer = () => activePlayer;
 
     const checkWinner = () => {
-        let winner = '';
+        let winner = "";
+        let winCheck = false;
         const currentBoard = board.getBoard();
         for (let i = 0; i < currentBoard.length; i++) {
             if (currentBoard[i].every(val => val === 1) || currentBoard[i].every(val => val === 2)) {
                 winner = getActivePlayer().name;
+                winCheck = true;
             }
         }
 
@@ -62,21 +65,29 @@ function gameController() {
             let col = currentBoard.map(row => row[j]);
             if (col.every(val => val === 1) || col.every(val => val === 2)) {
                 winner = getActivePlayer().name;
+                winCheck = true;
             }
         }
 
         if (currentBoard.every((row, i) => row[i] === 1) || currentBoard.every((row, i) => row[i] === 2)) {
             winner = getActivePlayer().name;
+            winCheck = true;
         }
 
         if (currentBoard.every((row, i) => row[currentBoard.length - 1 - i] === 1) || currentBoard.every((row, i) => row[currentBoard.length - 1 - i] === 2)) {
             winner = getActivePlayer().name;
+            winCheck = true;
+        }
+
+        if (roundCounter === 9 && winCheck === false) {
+            winner = "Tie!";
         }
 
         return winner;
     }
 
     const playRound = (row, column) => {
+        roundCounter++;
         board.placePiece(row, column, getActivePlayer().piece);
 
         if (checkWinner() === "") switchPlayerTurn();
