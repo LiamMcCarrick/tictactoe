@@ -43,6 +43,10 @@ body {
     cursor: pointer;
 }
 
+.cell {
+    font-size: 24px;
+}
+
 dialog {
     padding: 20px;
     text-align: center;

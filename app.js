@@ -105,9 +105,22 @@ function ScreenController() {
               const cellButton = document.createElement("button");
               cellButton.classList.add("cell");
 
+              let displayPiece = ""; 
+              switch(square) {
+                case 1:
+                    displayPiece = "X";
+                    break;
+                case 2:
+                    displayPiece = "O";
+                    break;
+                case 0:
+                    displayPiece = " ";
+                    break;
+              }
+
               cellButton.dataset.column = index;
               cellButton.dataset.row = rowIndex;
-              cellButton.textContent = square;
+              cellButton.textContent = displayPiece;
               boardDiv.appendChild(cellButton);
             })
         })
